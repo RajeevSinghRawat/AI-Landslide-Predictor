@@ -1,0 +1,107 @@
+<link rel="stylesheet" 
+href="style.css">
+</head>
+<body>
+<header class="topbar"><div class="top-inner">
+  <div class="brand"><div class="logo">⛰️</div><div><h1>AI-Based Land Use & Landslide Risk Analysis</h1><p>Location, terrain and weather screening</p></div></div>
+  <div class="top-tag">FIELD RESEARCH · V3.0</div>
+</div></header>
+<section class="hero-landing" aria-label="Landslide risk project introduction">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-kicker"><span>●</span> Regional weather & terrain watch</div>
+      <h2>Predict Earlier.<br>Respond Faster.<br><span>Protect Communities.</span></h2>
+      <p>Location-aware landslide risk screening combining rainfall, terrain details and available weather data. Explore a study area and review the factors that may contribute to slope instability.</p>
+      <div class="hero-actions"><a class="hero-primary" href="#location">⌕ Check area risk</a><a class="hero-secondary" href="#terrainMap">📍 Explore terrain map</a></div>
+    </div>
+    <aside class="hero-feature"><div class="live">● PROJECT OVERVIEW</div><h3>Four factors to review</h3><p>Rainfall, soil moisture, slope and land cover can help frame a preliminary assessment. Results are an academic prototype, not an official early-warning service.</p><a href="#assessmentStart">Open risk assessment →</a></aside>
+  </div>
+</section>
+<main class="wrap" id="assessmentStart">
+  <div class="intro"><div><h2>Risk Monitoring Dashboard</h2><p>Explore a study area, load available weather observations, assess environmental factors, and create a shareable analysis report.</p></div><div class="status-pill"><span class="dot"></span><span id="connectionStatus">Ready for analysis</span></div></div>
+  <section class="stats">
+    <div class="stat"><div class="stat-label">Latest risk score</div><div class="stat-value" id="statRisk">—</div><div class="stat-note" id="statRiskNote">Run an analysis to begin</div></div>
+    <div class="stat"><div class="stat-label">Study location</div><div class="stat-value" id="statLocation" style="font-size:19px">Not set</div><div class="stat-note">Selected site</div></div>
+    <div class="stat"><div class="stat-label">Rainfall input</div><div class="stat-value" id="statRain">—</div><div class="stat-note">Accumulated rainfall (mm)</div></div>
+    <div class="stat"><div class="stat-label">Saved analyses</div><div class="stat-value" id="statHistory">0</div><div class="stat-note">Stored in this browser</div></div>
+  </section>
+  <div class="layout">
+    <aside class="sidebar">
+      <section class="panel">
+        <div class="panel-head"><h3><span class="step">01</span>Study location</h3></div>
+        <div class="field"><label for="location">Location / area to check</label><input id="location" type="text" placeholder="e.g. Himachal Pradesh, India"><div class="hint">Type a state, district, city, or village, then click Find area. Live GPS detects where your device is.</div></div>
+        <div class="btnrow" style="margin:-4px 0 12px"><button class="secondary" id="searchAreaBtn" type="button">⌕ Find area</button></div>
+        <div class="field"><label for="coordinates">Coordinates (latitude, longitude)</label><input id="coordinates" type="text" placeholder="30.3165, 78.0322"><div class="hint">Use live location or enter coordinates.</div></div>
+        <div class="btnrow"><button class="secondary" id="liveBtn">◎ Use live location</button><button class="plain" id="locateBtn">Show on map</button></div>
+      </section>
+      <section class="panel">
+        <div class="panel-head"><h3><span class="step">02</span>Environmental inputs</h3></div>
+        <div class="field"><label for="rainfall">Rainfall amount (mm)</label><input id="rainfall" type="number" min="0" step="0.1" placeholder="e.g. 150"></div>
+        <div class="field"><label for="duration">Continuous rainfall duration (days)</label><input id="duration" type="number" min="0" step="0.1" placeholder="e.g. 3"></div>
+        <div class="two">
+          <div class="field"><label for="soil">Soil moisture (%)</label><input id="soil" type="number" min="0" max="100" step="0.1" placeholder="Auto-fill or enter"></div>
+          <div class="field"><label for="slope">Average slope (°)</label><input id="slope" type="number" min="0" max="90" step="0.1" placeholder="Auto-fill or enter"></div>
+        </div>
+        <div class="field"><label for="elevation">Elevation (metres)</label><input id="elevation" type="number" step="0.1" placeholder="Auto-fill from terrain data"></div>
+        <div class="btnrow" style="margin:0 0 14px"><button class="secondary" id="autoTerrainBtn" type="button">↻ Auto-fill terrain details</button></div>
+        <div class="hint" id="terrainStatus" style="margin:-5px 0 14px">Choose a location first. Elevation and modelled surface soil moisture can be fetched; slope is only a rough estimate from nearby elevation samples. Land cover and drainage still need verified data.</div>
+        <div class="field"><label for="flow">Average water flow (m³/s) — optional</label><input id="flow" type="number" min="0" step="0.1" placeholder="Leave blank if unknown"></div>
+        <div class="field"><label for="surface">Surface / land cover</label><select id="surface"><option value="unknown">Unknown / not assessed</option><option value="vegetated">Dense vegetation</option><option value="mixed">Mixed vegetation / open ground</option><option value="bare">Bare or disturbed ground</option><option value="built">Built-up / road cut</option></select></div>
+        <div class="field"><label for="drainage">Drainage condition</label><select id="drainage"><option value="unknown">Unknown / not assessed</option><option value="good">Good drainage</option><option value="moderate">Moderate drainage</option><option value="poor">Poor / blocked drainage</option></select></div>
+        <div class="field"><label for="kmlFile">KML boundary file (optional)</label><input id="kmlFile" type="file" accept=".kml,.xml"><div class="hint" id="kmlStatus">Upload a KML polygon to display its boundary.</div></div>
+        <div class="hint">Soil moisture and slope should be measured or sourced where possible. Complete the weather section too, then run your analysis at the bottom.</div>
+      </section>
+    </aside>
+    <div class="main-content">
+      <section class="panel" id="terrainMap">
+        <div class="map-head"><h3>Interactive terrain map</h3><div class="map-actions"><button class="plain" id="earthBtn">Open Google Earth ↗</button><button class="plain" id="mapHomeBtn">Reset view</button></div></div>
+        <div id="map"></div>
+        <div class="map-caption">Explore the terrain around your selected coordinates. A marker shows the selected point; uploaded KML polygons are drawn when available.</div><div id="mapStatus" role="status">Loading terrain map…</div>
+      </section>
+      <section class="panel">
+        <div class="panel-head"><h3><span class="step">03</span>Weather observations</h3><button class="secondary" id="weatherBtn">Load live weather</button></div>
+        <p class="hint" style="font-size:12px;margin:-8px 0 12px">First use Find area to choose a state/district/city, or Use live location for your device GPS. Then load weather. Values represent the selected map point/nearest grid cell, not every part of a whole state or a local rain gauge.</p>
+        <div class="weather-strip">
+          <div class="weather-item"><label for="weatherTemp" style="display:block;font-size:11px;color:var(--muted)">Temperature (°C)</label><input id="weatherTemp" type="number" step="0.1" placeholder="Fill manually" aria-label="Temperature in Celsius"></div>
+          <div class="weather-item"><label for="weatherRain" style="display:block;font-size:11px;color:var(--muted)">Current rain (mm)</label><input id="weatherRain" type="number" min="0" step="0.1" placeholder="Fill manually" aria-label="Current precipitation in millimeters"></div>
+          <div class="weather-item"><label for="weatherHumidity" style="display:block;font-size:11px;color:var(--muted)">Humidity (%)</label><input id="weatherHumidity" type="number" min="0" max="100" step="1" placeholder="Fill manually" aria-label="Humidity percentage"></div>
+          <div class="weather-item"><label for="weatherWind" style="display:block;font-size:11px;color:var(--muted)">Wind speed (km/h)</label><input id="weatherWind" type="number" min="0" step="0.1" placeholder="Fill manually" aria-label="Wind speed in kilometers per hour"></div>
+        </div>
+        <div class="btnrow" style="margin-top:10px"><button class="plain" id="useWeatherRainBtn" type="button">Copy current rain to rainfall input</button><button class="plain" id="clearWeatherBtn" type="button">Clear weather fields</button></div>
+        <div class="hint" id="weatherStatus" style="margin-top:10px">Weather not loaded. You can enter values manually or load them automatically.</div>
+      </section>
+      <section class="analysis-action panel" aria-label="Run final risk analysis">
+        <div><span class="eyebrow">FINAL STEP</span><h3>Ready to assess your study area?</h3><p>Review the location, environmental inputs and weather observations above, then run the risk screening.</p></div>
+        <div class="analysis-buttons"><button class="primary analyze-large" id="analyzeBtn">Analyze risk <span aria-hidden="true">→</span></button><button class="plain" id="resetBtn">Reset inputs</button></div>
+      </section>
+      <section class="panel" id="resultPanel">
+        <div class="panel-head"><h3><span class="step">04</span>Risk assessment</h3><div class="btnrow no-print" style="flex:0 0 auto"><button class="secondary" id="pdfBtn">Print / Save PDF</button><button class="plain" id="csvBtn">Export CSV</button></div></div>
+        <div id="emptyResult" class="empty">Your assessment will appear here after you complete the inputs above and select <b>Analyze risk</b> at the final step.</div>
+        <div id="resultContent" style="display:none">
+          <div class="result-top">
+            <div class="score-ring" id="scoreRing"><div style="text-align:center"><strong id="riskScore">0</strong><br><small>/ 100</small></div></div>
+            <div class="result-title"><h3 id="riskHeading">Risk assessment</h3><span id="riskBadge" class="risk-badge risk-low">LOW</span><p id="resultSubtitle" style="margin-top:8px">Selected study area</p></div>
+          </div>
+          <div class="mini-metrics">
+            <div class="mini"><span>Rainfall</span><strong id="outRain">—</strong></div><div class="mini"><span>Duration</span><strong id="outDuration">—</strong></div><div class="mini"><span>Soil moisture</span><strong id="outSoil">—</strong></div><div class="mini"><span>Average slope</span><strong id="outSlope">—</strong></div><div class="mini"><span>Water flow</span><strong id="outFlow">—</strong></div><div class="mini"><span>Land cover</span><strong id="outSurface">—</strong></div>
+          </div>
+          <div class="section-grid" style="margin-top:18px">
+            <div><h4 style="margin:0 0 8px">Factor contribution (prototype)</h4><canvas id="factorChart" height="220"></canvas></div>
+            <div><h4 style="margin:0 0 8px">Analysis summary</h4><p id="analysisSummary" style="font-size:13px;color:var(--muted);margin-top:0"></p><h4 style="margin:16px 0 8px">Recommended checks</h4><ul id="recommendations" style="font-size:13px;color:var(--muted);padding-left:20px;margin-top:0"></ul></div>
+          </div>
+          <div class="alert"><b>Important:</b> This is an academic screening prototype, not an official warning or a scientifically validated prediction. Do not use its score for evacuation or safety decisions. Follow local authorities and geological experts.</div>
+        </div>
+      </section>
+      <section class="panel">
+        <div class="panel-head"><h3><span class="step">05</span>Prediction history</h3><div class="btnrow no-print" style="flex:0 0 auto"><button class="plain" id="downloadHistoryBtn">Export history</button><button class="danger" id="clearHistoryBtn">Clear</button></div></div>
+        <div id="historyEmpty" class="empty">No saved analyses yet. Each analysis is saved in this browser.</div>
+        <div class="history-wrap" id="historyWrap" style="display:none"><table class="history-table"><thead><tr><th>Date/time</th><th>Location</th><th>Score</th><th>Level</th><th></th></tr></thead><tbody id="historyBody"></tbody></table></div>
+      </section>
+    </div>
+  </div>
+  <div class="footer">AI-Based Land Use & Landslide Risk Analysis · Academic prototype · Not an official warning system</div>
+</main>
+<div class="toast" id="toast"></div>
+<script src="script.js"></script>
+</body>
+</html>
